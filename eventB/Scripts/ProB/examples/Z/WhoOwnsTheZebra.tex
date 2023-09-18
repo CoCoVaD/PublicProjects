@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage[pdfborder=0 0 0]{hyperref}
+\usepackage{tikz}
+\usepackage{fuzz}
+\begin{document}
+
+\begin{tikzpicture}[remember picture,overlay]
+  \node [anchor=north east,xshift=-3em,yshift=-1em] at (current page.north east)
+  { \pgfimage[width=0.4\textwidth]{zebra} };
+\end{tikzpicture}
+
+
+\section*{Zebra puzzle%
+\footnote{Taken from \url{http://www.hakank.org/tailor/zebra.eprime}}}
+This is a puzzle which has been circulating the net. There are a couple
+different versions out there which try to be a little more politically
+correct but are essentially the same problem.    
+
+\section{The setting}
+\begin{quote}
+  There are five houses, each of a different color and inhabited by
+  men of different nationalities, with different pets, drinks,
+  and cigarettes.
+\end{quote}
+We identify the houses by numbers $1\upto 5$, with 1 as the house most left and
+5 the house most right.
+\begin{zed}
+  House == 1\upto 5 \\
+\end{zed}
+and model the color of houses, nationalities, pets, drinks and cigarettes as deferred
+sets. The elements are taken from the rules below.
+\begin{zed}
+  Color ::= red | green | ivory | yellow | blue \\
+  Nationality ::= english | spanish | ukrainian | norwegian | japanese \\
+  Pet ::= dog | snails | fox | horse | zebra \\
+  Drink ::= coffee | tea | milk | juice | water \\
+  Cigarettes ::= old\_gold | kools | chesterfields | lucky\_strike | parliaments \\
+\end{zed}
+Each property is modeled by a bijection from a property to a number of a house.
+\begin{axdef}
+  color : Color \bij House \\
+  nationality : Nationality \bij House \\
+  pet : Pet \bij House \\
+  drink : Drink \bij House \\
+  cigarettes : Cigarettes \bij House \\
+\end{axdef}
+Two houses are next to each other if their difference is one.
+\begin{axdef}
+  next : House \rel House
+  \where
+  next = \{~a,b : House | a=b+1 \lor b=a+1~\}
+\end{axdef}
+
+\section{The rules}
+\begin{itemize}
+\item The Englishman lives in the red house.
+  \begin{zed}
+    nationality(english) = color(red)
+  \end{zed}
+\item The Spaniard owns the dog.
+  \begin{zed}
+    nationality(spanish) = pet(dog)
+  \end{zed}
+\item Coffee is drunk in the green house.
+  \begin{zed}
+    drink(coffee) = color(green)
+  \end{zed}
+\item The Ukrainian drinks tea.
+  \begin{zed}
+    nationality(ukrainian) = drink(tea)
+  \end{zed}
+\item The green house is immediately to the right of the ivory house.
+  \begin{zed}
+    color(green) = color(ivory) + 1
+  \end{zed}
+\item The Old Gold smoker owns snails.
+  \begin{zed}
+    cigarettes(old\_gold) = pet(snails)
+  \end{zed}
+\item Kools are smoked in the yellow house.
+  \begin{zed}
+    cigarettes(kools) = color(yellow)
+  \end{zed}
+\item Milk is drunk in the middle house.
+  \begin{zed}
+    drink(milk) = 3
+  \end{zed}
+\item The Norwegian lives in the first house on the left.
+  \begin{zed}
+    nationality(norwegian) = 1
+  \end{zed}
+\item The man who smokes Chesterfields lives in the house next to the
+  man with the fox.
+  \begin{zed}
+    cigarettes(chesterfields) \mapsto pet(fox) \in next
+  \end{zed}
+\item Kools are smoked in the house next to the house where the horse is
+  kept.
+  \begin{zed}
+    cigarettes(kools) \mapsto pet(horse) \in next
+  \end{zed}
+\item The Lucky Strike smoker drinks orange juice.
+  \begin{zed}
+    cigarettes(lucky\_strike) = drink(juice)
+  \end{zed}
+\item The Japanese smoke Parliaments.
+  \begin{zed}
+    nationality(japanese) = cigarettes(parliaments)
+  \end{zed}
+\item The Norwegian lives next to the blue house.
+  \begin{zed}
+    nationality(norwegian) \mapsto color(blue) \in next
+  \end{zed}
+\end{itemize}
+
+\section{Who owns the zebra?}
+NOW, who drinks water? And who owns the zebra?
+\begin{axdef}
+  drinks\_water, owns\_zebra : Nationality
+  \where
+  drinks\_water = nationality\inv( drink(water) ) \\
+  owns\_zebra = nationality\inv( pet(zebra) ) \\
+\end{axdef}
+
+\section{Just for animation}
+ProZ insists on having a state and initialisation.
+\begin{zed}
+  State \defs [~ x:\nat ~] \\
+  Init \defs [~ State | x=0 ~]\\
+\end{zed}
+
+\end{document}

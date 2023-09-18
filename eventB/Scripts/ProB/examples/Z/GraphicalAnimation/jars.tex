@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage{fuzz}
+
+\begin{document}
+
+\section*{Filling jars}
+We have two jars, $j3$ has a volume of 3~pint, whereas $j5$ can contain 5~pint.
+\begin{zed}
+  Jars ::= j3 | j5
+\end{zed}
+\begin{axdef}
+  max\_fill : Jars \fun \nat \\
+  \where
+  max\_fill = \{ j3\mapsto 3,j5 \mapsto 5\} \\
+\end{axdef}
+Each jar currently contains a certain amount of liquid.
+\begin{schema}{Level}
+  level : Jars \fun \nat \\
+  \where
+  \forall j:Jars @ level(j) \leq max\_fill(j)
+\end{schema}
+In the beginning, all jars are empty.
+\begin{zed}
+  Init \defs [~ Level ~|~ \ran~level = \{0\} ~] \\
+\end{zed}
+A (not full) jar can be filled completely.
+\begin{schema}{Fill\_Jar}
+  \Delta Level \\
+  j?:Jars \\
+  \where
+  level(j?) < max\_fill(j?) \\
+  level' = level \oplus \{j?\}\dres max\_fill \\
+\end{schema}
+Or a (non-empty) one can be emptied completely.
+\begin{schema}{Empty\_Jar}
+  \Delta Level \\
+  j?:Jars \\
+  \where
+  level(j?) > 0 \\
+  level' = level \oplus \{j?\mapsto 0\} \\
+\end{schema}
+Or we can pour the liquid of one jar into the other, until one is empty or full.
+\begin{schema}{Transfer}
+  \Delta Level \\
+  j1?, j2? : Jars \\
+  amount? : \nat_1
+  \where
+  j1? \neq j2? \\
+  amount? = min(\{level~j1?, max\_fill~j2? - level~j2?\}) \\
+  level' = level \oplus \{ j1?\mapsto level~j1?-amount?, j2?\mapsto level~j2?+amount? \}
+\end{schema}
+
+\subsection*{The puzzle}
+Can we fill one jar with 4~pints by the operations above. If yes, how?
+\begin{schema}{ProZ\_Goal}
+  Level \\
+  \where
+  4 \in \ran(level)
+\end{schema}
+
+\subsection*{Visualisation}
+Having the maximum fill of all jars helps us in the visualisation:
+\begin{axdef}
+  global\_maximum : \nat \\
+  \where
+  global\_maximum = max(\ran(max\_fill)) \\
+\end{axdef}
+
+We declare a type for the used images, the names of the elements refer to the file names of the GIF files.
+\begin{zed}
+  Images ::= Filled | Empty | Void
+\end{zed}
+The animation consists of a grid of images that is updated in each new state.
+The $animation\_function$ maps a coordinate to an image where $(1\mapsto 1)$ is the upper-left corner.
+\begin{schema}{ProZ\_Settings}
+  Level \\
+  animation\_function\_default : (\nat \cross Jars) \pfun Images \\
+  animation\_function : (\nat \cross Jars) \pfun Images \\
+  \where
+  animation\_function\_default = (1\upto global\_maximum \cross Jars) \cross \{ Void \} \\
+  animation\_function = \\
+  \t1 (\{ l:1\upto global\_maximum; c:Jars | l\leq max\_fill~c @ \\
+  \t2 global\_maximum+1-l\mapsto c\} \cross \{Empty\}) \oplus \\
+  \t1 (\{ l:1\upto global\_maximum; c:Jars | l\leq level~c @ \\
+  \t2 global\_maximum+1-l\mapsto c\} \cross \{Filled\})
+\end{schema}
+
+\end{document}

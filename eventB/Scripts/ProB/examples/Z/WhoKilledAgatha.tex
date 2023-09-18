@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage[pdfborder=0 0 0]{hyperref}
+\usepackage{tikz}
+\usepackage{fuzz}
+\begin{document}
+
+\usetikzlibrary{positioning}
+
+
+\section*{Who killed Agatha?%
+  \footnote{\url{http://www.lsv.ens-cachan.fr/~goubault/H1.dist/H1.1/Doc/h1003.html}}}
+
+ This is a standard benchmark for theorem proving.
+
+ Someone in Dreadsbury Mansion killed Aunt Agatha. 
+ Agatha, the butler, and Charles live in Dreadsbury Mansion, and 
+ are the only ones to live there. A killer always hates, and is no 
+ richer than his victim. Charles hates noone that Agatha hates. Agatha 
+ hates everybody except the butler. The butler hates everyone not richer 
+ than Aunt Agatha. The butler hates everyone whom Agatha hates. 
+ Noone hates everyone. Who killed Agatha? 
+
+\section{Persons}
+We have three persons: Agatha, the butler and Charles.
+\begin{zed}
+  Person ::= Agatha | butler | Charles
+\end{zed}
+
+\subsection{Persons who hate each other}
+We model hate as an arbitrary relation between persons.
+\begin{axdef}
+  hates : Person \rel Person
+\end{axdef}
+
+\subsection{Who's how rich?}
+We model ``richer as'' as an relation between persons. 
+We know that the relation is irreflexive (no person is richer than itself),
+transitive and trichotomous (one person is always richer than the other or
+vice versa, never both directions).
+\begin{axdef}
+  richer : Person \rel Person
+  \where
+  richer \cap \id Person = \emptyset \\
+  \forall x,y,z : Person | x\mapsto y\in richer \land y\mapsto z\in richer @ x\mapsto z\in richer \\
+  \forall x,y : Person |  x\neq y @ x\mapsto y\in richer \iff y\mapsto x \notin richer
+\end{axdef}
+
+\section{The crime}
+We search for the killer.
+\begin{axdef}
+  killer : Person
+\end{axdef}
+He hates his victim
+\begin{zed}
+  killer \mapsto Agatha \in hates
+\end{zed}
+and is no richer than the victim.
+\begin{zed}
+  killer \mapsto Agatha \notin richer
+\end{zed}
+Charles hates noone that Agatha hates.
+\begin{zed}
+  hates\limg\{Agatha\}\rimg \cap hates\limg\{Charles\}\rimg = \emptyset
+\end{zed}
+Agatha hates everybody except the butler.
+\begin{zed}
+  hates\limg\{Agatha\}\rimg = Person \setminus \{butler\}
+\end{zed}
+The butler hates everyone not richer than Aunt Agatha.
+\begin{zed}
+  \forall x:Person | x\mapsto Agatha \notin richer @ butler\mapsto x \in hates
+\end{zed}
+The butler hates everyone whom Agatha hates.
+\begin{zed}
+  hates\limg\{Agatha\}\rimg \subseteq hates\limg\{butler\}\rimg
+\end{zed}
+Noone hates everyone.
+\begin{zed}
+  \forall x:Person @ hates\limg\{x\}\rimg \neq Person
+\end{zed}
+
+\section{Just for animation}
+ProZ insists on having a state and initialisation.
+\begin{zed}
+  State \defs [~ x:\nat ~] \\
+  Init \defs [~ State | x=0 ~]\\
+\end{zed}
+
+\end{document}

@@ -1,0 +1,112 @@
+:- use_module(library(avl)).
+:- use_module(library(between)).
+
+start(pos(max,E)) :- empty_avl(E).
+ %, avl_store((2,2),E,max,E2), avl_store((1,3),E2,min,E3), avl_store((2,1),E3,max,E4), avl_store((2,3),E4,min,E5).
+trans(A,P,P3) :- game_move(P,A,P2), normalise(P2,P3).
+trans(auto_play(Depth,Value,Action),State,State2) :- player(State,Player),
+   auto_play_for(Player),
+   enum_depth(Depth),
+   format('~nComputing Alpha-Beta Move for depth=~w and player=~w~n',[Depth,Player]),
+   statistics(walltime,_),
+   (minimax_value(State,Depth,Value,Action,State2)
+    -> statistics(walltime,[_,Delta]),
+       format('Move found in ~w ms: ~w, value=~w~n',[Delta,Action,Value])).
+%trans(win,pos(P,B),pos(P,B)) :- win(B,_,max).
+%trans(loose,pos(P,B),pos(P,B)) :- win(B,_,min).
+
+auto_play_for(min).
+%auto_play_for(max).
+%enum_depth(2).
+enum_depth(4).
+%enum_depth(6).
+%enum_depth(8).
+
+normalise(pos(P,B),pos(P,NB)) :- avl_to_list(B,L), ord_list_to_avl(L,NB).
+
+:-if(1=2).
+% normal game_value
+player_worst_outcome_with_depth(P,_Depth,V) :- player_worst_outcome_with_depth(P,V).
+utility(P,_Depth,Val) :- heuristic_function_result(P,Val).
+:-else.
+% use the following lines to take distance to win/loss into account (slows down mini-max slightly)
+player_worst_outcome_with_depth(P,Depth,W) :- player_worst_outcome_with_depth(P,V), W is V*Depth.
+utility(P,Depth,Val) :- heuristic_function_result(P,HV), Val is HV*Depth.
+:- endif.
+
+player_worst_outcome_with_depth(max,X) :- X is -1.
+player_worst_outcome_with_depth(min,1).
+
+
+game_move(pos(P,B),place(I,J,Piece),pos(OP,B2)) :- 
+   other_player(P,Piece,OP), \+ win(B,_,OP),
+   between(1,7,I), find_free_slot(I,B,1,J),
+   avl_store((I,J),B,P,B2).
+
+
+find_free_slot(I,B,J,Res) :- avl_fetch((I,J),B,_), !, J>1, Res is J-1.
+find_free_slot(I,B,J,Res) :- J<6, !,J1 is J+1, find_free_slot(I,B,J1,Res).
+find_free_slot(I,B,R,R). % we reached bottom
+
+not_free_above(I,J,B) :- between(1,J,J1), avl_fetch((I,J1),B,_).
+
+player(pos(P,B),P).
+
+:- compile(minimax_alpha_beta).
+
+% -----------------
+  
+other_player(max,red,min).
+other_player(min,yellow,max).
+
+prop(pos(_,B),'='('WINNER'(Reason),P)) :- win(B,Reason,P).
+prop(pos(P,B),'='('TO_MOVE',P)).
+prop(P,'='('HEURISTIC',V)) :- heuristic_function_result(P,V).
+prop(pos(_,B),'='(board(I,J),P)) :- get_board(I,J,B,P).
+
+
+four_in_row(I,J,DeltaI,DeltaJ,B,Player) :-
+   (DeltaI=1 -> between(1,4,I) ; between(1,7,I)),
+   (DeltaJ=1 -> between(1,3,J) ; DeltaJ = -1 -> between(4,6,J) ; between(1,6,J)),
+   avl_fetch((I,J),B,Player),
+   I2 is I+DeltaI, J2 is J+DeltaJ, avl_fetch((I2,J2),B,Player),
+   I3 is I2+DeltaI, J3 is J2+DeltaJ, avl_fetch((I3,J3),B,Player),
+   I4 is I3+DeltaI, J4 is J3+DeltaJ, avl_fetch((I4,J4),B,Player).
+
+win(B,row(I,J),Player) :- four_in_row(I,J,1,0,B,Player).
+win(B,col(I,J),Player) :- four_in_row(I,J,0,1,B,Player).
+win(B,diagonal1(I,J),Player) :- four_in_row(I,J,1,1,B,Player).
+win(B,diagonal2(I,J),Player) :- four_in_row(I,J,1,-1,B,Player).
+
+get_board(I,J,B,Player) :- between(1,7,I), between(1,6,J),
+   (avl_fetch((I,J),B,P) -> Player=P ; Player=empty).
+
+
+heuristic_function_result(pos(_,B),Val) :- 
+  (win(B,_,P) -> val(P,Val) ; Val=0).
+val(min,X) :- X is -1.
+val(max,1).
+heuristic_function_active.
+
+animation_function_result(pos(_,Board),Matrix2) :-
+         findall(((J1,I1),Img),
+             (get_board(I,J,Board,Value),
+              animation_image(Value,Img,_), I1 is I, J1 is J
+              ),Matrix2).
+
+animation_image_right_click_transition(_Row,Col,place(Col,_,_)).
+animation_image_right_click_transition(Row,Col,test_rowcol(Row,Col)).
+animation_image_right_click_transition(Row,Col,auto_play(_,_,_)).
+
+animation_image_click_transition(Row,Col,_,_,[place(Col,_,_),auto_play(_,_,A)],4) :- dif(A,none).
+
+animation_image(Nr,S) :- animation_image(_,Nr,S).
+animation_image(empty,1,   'images/sm_O_light.gif').
+animation_image(max,2,   'images/sm_O_red.gif').
+animation_image(min,3,   'images/sm_O_yellow.gif').
+animation_image(drag,4,   'images/sm_gray_box.gif').
+
+
+
+
+  

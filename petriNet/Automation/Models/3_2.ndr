@@ -1,0 +1,25 @@
+p 175.0 85.0 p4 1 n Going2WP e
+t 60.0 190.0 t5 c 0 w n {noBallDetected/} s
+t 235.0 260.0 t6 c 0 w n {BallDetected/ lowerArm} s
+t 340.0 210.0 t9 c 0 w n {ballLost/ riseArm, bip, goBackRdWP} e
+p 340.0 360.0 p7 0 n LoweringArm ne
+p 640.0 195.0 p8 0 n Going2L ne
+t 635.0 275.0 t12 c 0 w n {caughtLow/ goDeliveringPt} w
+t 355.0 50.0 t11 c 0 w n {noAction/ goBackRdWP, riseArm} se
+t 690.0 60.0 t13 c 0 w n {arrivedWP/} e
+p 545.0 50.0 p9 0 n at_L ne
+e t12 p8 1 n
+e t9 p4 1 n
+e p4 t6 1 n
+e p7 t9 1 n
+e p8 t13 1 n
+e t13 p9 1 n
+e p9 t11 1 n
+e t11 p4 1 n
+e t6 p7 1 n
+e p4 0.5472792378 51.2445119 t5 0.1805086292 66.21178143 1 n
+e p7 t12 1 n
+e t5 p4 1 n
+h Model3_2
+
+

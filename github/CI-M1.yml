@@ -1,0 +1,70 @@
+name: Export Validation Results
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  validation-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2  # Updated to v2 for compatibility
+
+      - name: Grant Execute Permissions
+        run: |
+          chmod +x petriNet/CI-Testing/test-call-tina.sh
+          chmod +x eventB/CI-Testing/test-call-eventB.sh
+
+      - name: Launch tests
+        run: |
+          ./eventB/CI-Testing/test-call-eventB.sh
+          ./petriNet/CI-Testing/test-call-tina.sh
+
+      - name: Provide results for Event-B files
+        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
+        with:
+          name: eventB-report
+          path: eventB/Models/OP/Final_Output_eventB.txt
+
+      - name: Provide results for PetriNet (tina) files
+        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
+        with:
+          name: tina-report
+          path: petriNet/Models/OP/Final_Output_tina.txt
+
+      - name: Create Git Tag
+        run: |
+          git tag -a v${{ github.run_number }} -m "Version v${{ github.run_number }}"
+          git push origin v${{ github.run_number }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            eventB/Models/OP/Final_Output_eventB.txt
+            petriNet/Models/OP/Final_Output_tina.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts to Release
+        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
+        with:
+          name: release-artifacts
+          path: |
+            eventB/Models/OP/Final_Output_eventB.txt
+            petriNet/Models/OP/Final_Output_tina.txt
+
+      - name: Publish GitHub Release
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const release_id = '${{ steps.create_release.outputs.id }}';
+            github.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release_id,
+              draft: false
+            })

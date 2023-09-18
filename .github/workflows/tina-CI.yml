@@ -1,0 +1,18 @@
+# This workflow will run automatic tests for tina 
+# through given shell test runners and tina environment
+
+name: Java CI
+
+# Every push on 'main' branch
+# should probably be changed to a more precise hook to avoid useless tests
+on:
+  push:
+    branches: [ "dev" ]
+  
+jobs:
+  tina-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3 # Access the files of your own repository
+    - name: Launch tests
+      run: N7/CI-Testing/test-call.sh # Path to shell launcher

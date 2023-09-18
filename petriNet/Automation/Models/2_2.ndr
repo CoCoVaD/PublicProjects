@@ -1,0 +1,33 @@
+p 280.0 365.0 p7 0 e PartinBs w
+p 340.0 50.0 p4 1 ne PartinT nw
+t 340.0 125.0 t2 c 0 w n {/TakePart fromT2M ,Startmeasurement } w
+p 340.0 205.0 p6 0 e {/Partmeasured} w
+t 280.0 280.0 t4 c 0 w n {OK/MovePartM2Bs} w
+t 410.0 280.0 t3 c 0 w n {NotOK/MovePartM2L} e
+p 410.0 370.0 p8 0 w PartinL e
+p 520.0 185.0 p5 1 n Mfree e
+t 25.0 155.0 t5 c 0 w n {/AddNewPart2T} e
+t 685.0 155.0 t6 c 0 w n {/AddNewPart2T} e
+p 500.0 105.0 p0 1 n Rfree e
+e p0 t3 1 n
+e t3 p0 1 n
+e p0 t4 1 n
+e t4 p0 1 n
+e t6 0.3123409816 49.76946855 p4 0.02382009066 127.4244874 1 n
+e t5 0.1325730861 104.0624812 p4 0.4923751226 146.1677119 1 n
+e p5 t2 1 n
+e t4 p5 1 n
+e t3 p5 1 n
+e t2 0.08110412789 77.89736838 p0 0.4763034291 60.67124523 1 n
+e p0 0.6010676439 47.20169488 t2 0.9685835209 71.38627319 1 n
+e t2 p6 1 n
+e t4 p7 1 n
+e t3 p8 1 n
+e p6 t3 1 n
+e p6 t4 1 n
+e p4 t2 1 n
+e p7 0.4921790093 122.1474519 t5 0.7489529431 152.0032894 1 n
+e p8 0.02196434084 109.0366911 t6 0.7380856852 120.3370267 1 n
+h Model2_2
+
+

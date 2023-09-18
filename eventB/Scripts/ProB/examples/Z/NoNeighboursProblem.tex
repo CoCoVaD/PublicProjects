@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage[pdfborder=0 0 0]{hyperref}
+\usepackage{tikz}
+\usepackage{fuzz}
+\begin{document}
+
+\usetikzlibrary{positioning}
+
+\section*{No Neighbours Problem}
+
+Assign the numbers $1\upto 8$ to vertices $A\upto H$ in the graph 
+below such that the values of connected vertices differ by more than one\
+\footnote{From: \url{http://www.g12.csse.unimelb.edu.au/wiki/doku.php?id=contrib:no_neighbours:wiki}}
+
+\begin{center}
+  \begin{tikzpicture}
+    [vertice/.style={circle,draw}]
+    \node[vertice] (c)              {C};
+    \node[vertice] (d) [right=of c] {D};
+    \node[vertice] (e) [right=of d] {E};
+    \node[vertice] (f) [right=of e] {F};
+  
+    \node[vertice] (a) [above=of d] {A};
+    \node[vertice] (b) [right=of a] {B};
+
+    \node[vertice] (g) [below=of d] {G};
+    \node[vertice] (h) [right=of g] {H};
+
+    \draw (c) -- (a) -- (b) -- (f) -- (h) -- (g) -- (c) -- (d) -- (e) -- (f);
+    \draw (a) -- (e) -- (b) -- (d) -- (a);
+    \draw (d) -- (h) -- (e) -- (g) -- (d);
+  \end{tikzpicture}
+\end{center}
+
+\subsection*{Encoding the graph}
+We define a set of vertices $V$, containing the vertices $A\upto H$.
+\begin{zed}
+  V ::= A | B | C | D | E | F | G | H
+\end{zed}
+We encode the graph layout in the relation $next$.
+\begin{axdef}
+  next : V \rel V
+  \where
+  next = \{ A\mapsto B, A\mapsto C, A\mapsto D, A\mapsto E, \\
+  \t1 B\mapsto D, B\mapsto E, B\mapsto F, \\
+  \t1 C\mapsto D, C\mapsto G, \\
+  \t1 D\mapsto E, D\mapsto G, D\mapsto H, \\
+  \t1 E\mapsto F, E\mapsto G, E\mapsto H, \\
+  \t1 F\mapsto H, \\
+  \t1 G\mapsto H \}
+\end{axdef}
+
+\subsection*{Encoding the numbers}
+Each vertice has a number between 1 and 8 assigned, we encode this by a total funtion $number$.
+If two vertices are connected by $next$, their assigned values must differ by
+more than one.
+\begin{axdef}
+  number : V \fun 1\upto 8
+  \where
+  \forall x,y:V | x\mapsto y\in next @ \\ 
+  \t1 number(x)-number(y) > 1 \lor number(y)-number(x) > 1
+\end{axdef}
+
+\subsection*{Proz stuff}
+ProZ currently needs something that looks like a state.
+\begin{zed}
+  State \defs [~ x:\nat ~]\\
+  Init \defs [~State | x=1 ~]
+\end{zed}
+
+\end{document}

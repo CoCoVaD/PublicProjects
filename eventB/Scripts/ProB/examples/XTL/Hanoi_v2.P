@@ -1,0 +1,49 @@
+
+trans(X,A,B) :- kante(A,X,B).
+prop(X,unsafe) :- ziel(X).
+prop(X,X).
+prop(X,h(L)) :- heuristic_function_result(X,L).
+
+start([InitialTower,[],[]]) :- n(N), nrs(1,N,InitialTower).
+
+ziel([[],[],_]).
+
+n(5).
+nrs(N,N,[N]).
+nrs(N,M,[N|T]) :- N<M, N1 is N+1, nrs(N1,M,T).
+
+passt([],_).
+passt([X|_],H) :- H<X.
+
+:- use_module(library(lists)).
+kante(Pegs,move(disc(H),from(N1)),NewPegs) :-
+   nth1(N1,Pegs,[H|S1],Rest1),
+   nth1(N2,Rest1,S2,Rest2),
+   passt(S2,H), % H passt auf S2
+   nth1(N2,NewRest1,[H|S2],Rest2),
+   nth1(N1,NewPegs,S1,NewRest1).
+
+
+animation_image(0,'images/Disc_empty.gif').
+animation_image(1,'images/Disc1.gif').
+animation_image(2,'images/Disc2.gif').
+animation_image(3,'images/Disc3.gif').
+animation_image(4,'images/Disc4.gif').
+animation_image(5,'images/Disc5.gif').
+
+animation_function_result([Left,Middle,Right],Result) :- n(N),
+   reverse(Left,LR),tower_anim(LR,1,N,LT),
+   reverse(Middle,MR),tower_anim(MR,2,N,MT),
+   reverse(Right,RR),tower_anim(RR,3,N,RT),
+   append([LT,MT,RT],Result). %, print(Result),nl.
+
+tower_anim([],Col,Row,[((Row,Col),0)|T]) :- Row>0, R1 is Row-1, tower_anim([],Col,R1,T).
+tower_anim([],Col,0,[]).
+tower_anim([Disc|T],Col,Row,[((Row,Col),Disc)|AT]) :-
+   R1 is Row-1,
+   tower_anim(T,Col,R1,AT).
+
+animation_image_right_click_transition(Row,Col,move(_,from(Row))).
+
+heuristic_function_active.
+heuristic_function_result([T1,T2,T3],Len) :- length(T1,Len1), length(T2,Len2), Len is Len1+Len2.

@@ -1,0 +1,10 @@
+GOOD
+G not(deadlock)
+GF{nb_planes<=max_planes}
+G(e(Landing)  => {nb_planes<max_planes})
+G(e(Take_Off)  => {nb_planes>0})
+BAD
+G (deadlock)
+GF{nb_planes>max_planes}
+G(e(Landing)  => {nb_planes=max_planes})
+G(e(Take_Off)  => {nb_planes=0})

@@ -1,0 +1,14 @@
+GOOD
+G not(deadlock)
+GF{nb_cars<=nb_max}
+G(e(Enter_lot)  => {nb_cars<=nb_max })
+G(e(Leave_lot)  => {nb_cars>0})
+G(e(Get_in) => {nce>0 & nce + ncl <=1})
+G(e(Get_out) => {ncp>0 & ncl + nce <1})
+BAD
+G (deadlock)
+GF{nb_cars>nb_max}
+G(e(Enter_lot)  => {nb_cars=nb_max})
+G(e(Leave_lot)  => {nb_cars=0})
+G(e(Get_in) => {nce=0})
+G(e(Get_out) => {ncp=0})

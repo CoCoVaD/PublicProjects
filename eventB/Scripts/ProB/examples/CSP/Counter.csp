@@ -1,0 +1,20 @@
+-- Counter.csp
+
+channel Even, Inc, Odd, Reset, reset
+channel count:{0..99}
+
+MAIN = Even -> Inc -> MAIN [] Odd -> Inc -> Inc -> Inc -> MAIN2
+MAIN2 = Even -> Inc -> MAIN2 [] Odd -> count?x -> Reset -> MAIN
+
+-- HIDE_CSPB is a special keyword to instruct ProB to hide those events for MAIN in CSP||B mode
+-- HIDE_CSPB = {| Inc |}
+HIDE_CSPB = {| Inc, Reset |}
+
+
+Spec = Even -> Odd -> Even -> Odd -> count.5 -> Spec
+
+assert MAIN :[ deadlock free [F] ]
+assert MAIN :[ livelock free [F] ]
+assert Spec :[ livelock free [F] ]
+assert MAIN [F= Spec
+assert Spec [F= MAIN

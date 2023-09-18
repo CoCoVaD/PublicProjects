@@ -1,0 +1,239 @@
+
+
+% a version of the Java BC interpreter with small-step semantics for animation with ProB's XTL interface
+% this version uses a simple abstract domain
+
+% specifying the start state:
+start(state(PC,In)) :- 
+   PC=0, init_env([],In).
+
+% specifying the next state relation:
+trans(Opcode,state(PC,In),NewState) :-
+    % print('> '),print(PC), print('   '), print(In), %%
+	instr(PC,Opcode,Size), !,
+	NextPC is PC+Size,
+	% print('  --> '),print(Opcode),nl, %%
+	ex_opcode(Opcode,NextPC,In,NewState).
+
+% specifying properties that appear in the State Properties view:
+prop(state(PC,_),'='('PC',PC)).
+prop(state(_,env(Stack,_)),'='('STACK',Stack)).
+prop(state(_,env(_,Local)),'='(LocalVar,Val)) :- member(VarNr/Val,Local),tools:ajoin(['VAR_',VarNr],LocalVar).
+
+
+interpreter_loop(PC,Out,state(PC,Out)).
+
+ex_opcode(nop,NextPC,In,Out) :- interpreter_loop(NextPC,In,Out).
+ex_opcode(return,_,In,state(finished,In)).
+ex_opcode(ireturn,_,In,state(result(Ret),Out)) :- pop(In,Ret,Out),
+   print('Return value: '), print(Ret),nl.
+ex_opcode(goto(Label),_,In,Out) :-
+    interpreter_loop(Label,In,Out).
+ex_opcode(istore(Var),NextPC,In,Out) :-
+    pop(In,Top,In2),
+    store(In2,Var,Top,Out2),
+    interpreter_loop(NextPC,Out2,Out).
+ex_opcode(pop,NextPC,In,Out) :-
+    pop(In,_Discarded,Out2),
+    interpreter_loop(NextPC,Out2,Out).
+ex_opcode(iload(Var),NextPC,In,Out) :-
+    load(Var,In,Val),
+    push(In,Val,Out2),
+    interpreter_loop(NextPC,Out2,Out).
+ex_opcode(iconst(Const),NextPC,In,Out) :-
+    push(In,Const,Out2),
+    interpreter_loop(NextPC,Out2,Out).
+ex_opcode(if(OP,Label),NextPC,In,Out) :-
+    pop(In,RHSVAL1,In1),
+    pop(In1,RHSVAL2,In2),
+    if_then_else(OP,RHSVAL1,RHSVAL2,Label,NextPC,In2,Out).
+ex_opcode(if1(OP,Cst,Label),NextPC,In,Out) :-
+    pop(In,RHSVAL1,In2),
+    if_then_else(OP,RHSVAL1,Cst,Label,NextPC,In2,Out).
+ex_opcode(iop(OP),NextPC,In,Out) :-
+    pop(In,RHSVAL1,In1),
+    pop(In1,RHSVAL2,In2),
+    ex_op(OP,RHSVAL1,RHSVAL2,Res),
+    push(In2,Res,Out2),
+    interpreter_loop(NextPC,Out2,Out).
+ex_opcode(iinc(Var,Offset),NextPC,In,Out) :-
+    load(Var,In,Val),
+    ex_op(+,Val,Offset,Res),
+    store(In,Var,Res,Out2),
+    interpreter_loop(NextPC,Out2,Out).
+ex_opcode(println(Var),NextPC,In,Out) :-  /* artificial opcode for debugging */
+    load(Var,In,Val),
+    print('Value of variable '), print(Var), print(' = '), print(Val),nl,
+    interpreter_loop(NextPC,In,Out).
+    
+if_then_else(OP,Arg1,Arg2,TrueLabel,_FalseLabel,In,Out) :-
+    test_op(OP,Arg1,Arg2), %print(test_op(OP,Arg1,Arg2)),nl,
+    interpreter_loop(TrueLabel,In,Out).
+if_then_else(OP,Arg1,Arg2,_TrueLabel,FalseLabel,In,Out) :-
+    false_op(OP,Arg1,Arg2),
+    interpreter_loop(FalseLabel,In,Out).
+
+/* --------------------------------------- */
+/*  Generic Environment Related Predicates */
+/* --------------------------------------- */
+
+init_env(Parameters,env([],Parameters)). % Parameters should be [0/Para1,...]
+
+pop(env([X|S],Vars),Top,R) :- !, Top=X, R=env(S,Vars).
+pop(E,_,_) :- add_error(xtl,'Could not pop from stack: ',E),fail.
+
+%push(env(S,Vars),X,env([X|S],Vars)).
+%
+%store(env(Stack,Vars),Key,Value,env(Stack,NVars)) :-
+%    update(Vars,Key,Value,NVars).
+    
+load(Key,env(_S,Env),Val) :- lookup(Key,Env,Val).
+
+/* --------------------------------------- */
+
+
+/* update(OldEnv, VariableName, NewValue, NewEnv) */
+update([],Key,Value,[Key/Value]).
+update([Key/_Value2|T],Key,Value,[Key/Value|T]).
+update([Key2/Value2|T],Key,Value,Res) :- Key2 \= Key,
+   (Key @< Key2 -> Res = [Key/Value, Key2/Value2|T]
+              ;  (Res = [Key2/Value2|BT], update(T,Key,Value,BT))
+   ).
+
+/* lookup(VariableName, Env, CurrentValue) */
+lookup(Key,[],Value) :- add_error(xtl,'Could not find variable:',Key),
+     Value=undefined.  /* This can be due to parameters which are passed as variables  0..n-1 */
+lookup(Key,[Key/Value|_T],Value).
+lookup(Key,[Key2/_Value2|T],Value) :-
+   (Key @> Key2 -> lookup(Key,T,Value) ; 
+     Key \= Key2 -> add_error(xtl,'Could not find variable:',Key), Value=undefined).
+% --------------------------------
+
+% Patch for Abstract interpreter:
+
+% Redefinition of predicate from javabc_interpreter.pl:
+push(env(S,Vars),Value,env([AV|S],Vars)) :-
+   abstract_value(Value,AV).
+
+% Redefinition of predicate from javabc_interpreter.pl:
+store(env(Stack,Vars),Key,Value,env(Stack,NVars)) :-
+    abstract_value(Value,AV),
+    update(Vars,Key,AV,NVars).
+
+% Redefinition of predicate from javabc_interpreter.pl:
+ex_op(OP,A1,A2,R) :- abstract_value(A1,AV1),
+	   abstract_value(A2,AV2),
+	   aex_op(OP,AV1,AV2,R).
+
+
+
+
+% abstract a single value into an abstract one
+abstract_value(X,AV) :- number(X),!,
+   (X=0 -> AV=0 
+     ; (X>0 -> AV = pos ; AV = neg)
+   ).
+abstract_value(X,X).
+
+
+
+aex_op(*,0,_,0).
+aex_op(*,pos,X,X).
+aex_op(*,neg,0,0).
+aex_op(*,neg,pos,neg).
+aex_op(*,neg,neg,pos).
+aex_op(*,neg,top,top).
+aex_op(*,top,0,0).
+aex_op(*,top,X,top) :- X\=0.
+
+aex_op(mod,0,_,_) :- print('*** Division by zero ***'),nl,fail.
+aex_op(mod,X,0,0) :- X\=0.
+aex_op(mod,X,pos,top) :- X\=0. % actually 0 or pos
+aex_op(mod,X,neg,top) :- X\=0. % actually 0 or neg
+aex_op(mod,X,top,top) :- X\=0.
+
+aex_op(+,0,X,X).
+aex_op(+,pos,0,pos).
+aex_op(+,pos,pos,pos).
+aex_op(+,pos,neg,top).
+aex_op(+,pos,top,top).
+aex_op(+,neg,0,neg).
+aex_op(+,neg,pos,top).
+aex_op(+,neg,neg,neg).
+aex_op(+,neg,top,top).
+aex_op(+,top,_,top).
+
+
+aex_op(-,X,0,X).
+aex_op(-,_,top,top).
+aex_op(-,top,X,top) :- X\=top.
+aex_op(-,pos,pos,top).
+aex_op(-,pos,neg,pos).
+aex_op(-,neg,pos,neg).
+aex_op(-,neg,neg,top).
+aex_op(-,0,pos,neg).
+aex_op(-,0,neg,pos).
+
+
+
+% Redefinition of predicate from javabc_interpreter.pl:
+test_op(<=,X,X).
+test_op(<=,top,X) :- X \= top. % X=top covered in clause 1
+test_op(<=,neg,X) :- X \= neg. % X=neg covered in clause 1
+%test_op(<=,0,0). % covered in clause 1
+test_op(<=,0,pos).
+test_op(<=,0,top).
+%test_op(<=,pos,pos). % covered in clause 1
+test_op(<=,pos,top).
+
+test_op(<,top,_).
+test_op(<,neg,_).
+test_op(<,0,pos).
+test_op(<,0,top).
+test_op(<,pos,pos).
+test_op(<,pos,top).
+
+test_op(=,top,_).
+test_op(=,X,top) :- X \= top.
+test_op(=,0,0).
+test_op(=,pos,pos).
+test_op(=,neg,neg).
+	
+test_op('!=',X,Y) :- (X\=0 ; Y\=0).
+
+test_op(>=,X,Y) :- test_op(<=,Y,X).
+test_op(>,X,Y) :- test_op(<,Y,X).
+
+
+% Redefinition of predicate from javabc_interpreter.pl:
+false_op(<,A1,A2) :- test_op(>=,A1,A2).
+false_op(>,A1,A2) :- test_op(<=,A1,A2).
+false_op(<=,A1,A2) :- test_op(>,A1,A2).
+false_op(>=,A1,A2) :- test_op(<,A1,A2).
+false_op(=,A1,A2) :- test_op('!=',A1,A2).
+false_op('!=',A1,A2) :- test_op(=,A1,A2).
+
+
+
+% --------------------------------
+
+/* Prolog Encoding of Byte Code */
+instr(0,iconst(2),1).
+instr(1,istore(1),1).
+instr(2,iconst(5),1).
+instr(3,istore(2),1).
+instr(4,iload(2),1).
+instr(5,istore(3),1).
+instr(6,iconst(1),1).
+instr(7,istore(4),2).
+instr(9,iload(3),1).
+instr(10,if1(<=,0,25),3).
+instr(13,iinc(3,-1),3).
+instr(16,iload(4),2).
+instr(18,iload(1),1).
+instr(19,iop(*),1).
+instr(20,istore(4),2).
+instr(22,goto(9),3).
+instr(25,println(4),2).
+instr(27,return,1).
+

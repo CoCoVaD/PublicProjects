@@ -1,0 +1,144 @@
+= Event B models
+
+:eventB: http://www.event-b.org/[Event-B]
+:prob: https://prob.hhu.de/[ProB]
+:rodin: http://www.event-b.org/install.html[Rodin]
+:probcli: https://prob.hhu.de/w/index.php?title=ProB_Cli[probcli]
+
+=== Event-B (Rodin) model validation using Prob
+
+In this section, models written in {eventB} with the help of {rodin} platform are uploaded. The models are exported from rodin in the .eventb format. The {prob} tool in the form of {probcli} command has been used for the validation process (LTL model checking).
+
+The models along with their scenarios are added below.
+
+==== Airport Traffic Controller (ATC)
+
+This model defines an automatic airport controller that aims at controlling the traffic of aircraft on the taxiway and the runway. This model also manages the authorization to access the runway for aircraft willing to take off or to land.
+
+//ATC_Abstract
+ifdef::env-github[]
+link:Models/ATC_Abstract.eventb[ATC_Abstract] is an abstract eventB model that focuses on the evolution of the number of aircraft on ground.
+
+endif::[]
+ifndef::env-github[]
+[source,petri,linenums]
+----
+include::Models/ATC_Abstract.eventb[]
+----
+endif::[]
+
+.ATC_Abstract
+[cols="2a,2"]
+|===
+| *Validation Rules* | *Result*
+| *Good Scenarios* | 
+| _There is no deadlock_ | :heavy_check_mark: or :x:
+| _Number of aircrafts on the ground should not exceed the maximum capacity of 20 aircrafts_ | :heavy_check_mark: or :x:
+| _Landing should be allowed only when number of aircrafts on ground is less than maximum capacity_ | :heavy_check_mark: or :x:
+| _Take off should be allowed only when there is atleast one aircraft on ground_ | :heavy_check_mark: or :x:
+
+| *Bad Scenarios* | 
+| _There is a deadlock_ | :heavy_check_mark: or :x:
+| _Number of aircrafts on the ground can exceed the maximum capacity of 20 aircrafts_ | :heavy_check_mark: or :x:
+| _Landing is allowed when number of aircrafts on ground is more than maximum capacity_ | :heavy_check_mark: or :x:
+| _Take off is allowed only when there is no aircraft on ground_ | :heavy_check_mark: or :x:
+|===
+
+//ATC_Ref1
+ifdef::env-github[]
+link:Models/ATC_Ref1.eventb[ATC_Ref1] is a first refined model of ATC_Abstract model which has the additional requirements of controlling the aircraft to enter and leave runway.
+
+endif::[]
+ifndef::env-github[]
+[source,petri,linenums]
+----
+include::Models/ATC_Ref1.eventb[]
+----
+endif::[]
+
+.ATC_Ref1
+[cols="2a,2"]
+|===
+| *Validation Rules* | *Result*
+| *Good Scenarios* | 
+| _There is no deadlock_ | :heavy_check_mark: or :x:
+| _Number of aircrafts on the ground should not exceed the maximum capacity of 20 aircrafts_ | :heavy_check_mark: or :x:
+| _Landing should be allowed only when number of aircrafts on ground is less than maximum capacity_ | :heavy_check_mark: or :x:
+| _Take off should be allowed only when there is atleast one aircraft on ground_ | :heavy_check_mark: or :x:
+| _Aircraft should be allowed to enter the runway only if there is atleast one aircraft in the taxiway and atleast one runway is free_ | :heavy_check_mark: or :x:
+| _Aircraft should be allowed to exit the runway only if there is atleast one aircraft which is already landed_ | :heavy_check_mark: or :x:
+
+| *Bad Scenarios* | 
+| _There is no deadlock_ | :heavy_check_mark: or :x:
+| _Number of aircrafts on the ground can exceed the maximum capacity of 20 aircrafts_ | :heavy_check_mark: or :x:
+| _Landing is allowed when number of aircrafts on ground is more than maximum capacity_ | :heavy_check_mark: or :x:
+| _Take off is allowed only when there is no aircraft on ground_ | :heavy_check_mark: or :x:
+| _Aircraft can be allowed to enter the runway if there is no aircrafts in the taxiway and all runways are occupied_ | :heavy_check_mark: or :x:
+| _Aircraft can be allowed to exit the runway if there is no aircraft which is already landed_ | :heavy_check_mark: or :x:
+|===
+
+==== Car Parking Controller
+
+This model defines a control system that allows cars to access a parking lot. This lot has a capacity of 500 cars. To enter and leave the lot, any car uses the same short road. This road is single lane, two-ways, i.e. cars can enter in the lot or leave it, but not both at the same time.
+
+//CarPark_Abstract
+ifdef::env-github[]
+link:Models/CarPark_Abstract.eventb[CarPark_Abstract] is an abstract eventB model that focuses on the evolution of the number of cars in the parking lot.
+
+endif::[]
+ifndef::env-github[]
+[source,petri,linenums]
+----
+include::Models/CarPark_Abstract.eventb[]
+----
+endif::[]
+
+.CarPark_Abstract
+[cols="2a,2"]
+|===
+| *Validation Rules* | *Result*
+| *Good Scenarios* | 
+| _There is no deadlock_ | :heavy_check_mark: or :x:
+| _Number of cars in the parking lot should not exceed the maximum capacity of 500_ | :heavy_check_mark: or :x:
+| _Car should be allowed to enter the lot only when number of cars in the parking lot is less than maximum capacity_ | :heavy_check_mark: or :x:
+| _Car should be allowed to leave the lot only if there is atleast one car in the parking lot_ | :heavy_check_mark: or :x:
+
+| *Bad Scenarios* | 
+| _There is a deadlock_ | :heavy_check_mark: or :x:
+| _Number of cars in the parking lot can exceed the maximum capacity of 500_ | :heavy_check_mark: or :x:
+| _Car can be allowed to enter the lot when number of cars in the parking lot is more than maximum capacity_ | :heavy_check_mark: or :x:
+| _Car can be allowed to leave the lot when there is no car in the parking lot_ | :heavy_check_mark: or :x:
+|===
+
+//CarPark_Ref1
+ifdef::env-github[]
+link:Models/CarPark_Ref1.eventb[CarPark_Ref1] is first refined eventB model of CarPark_Abstract which has the additional requirements of controlling the cars to enter and leave parking lot through access road.
+
+endif::[]
+ifndef::env-github[]
+[source,petri,linenums]
+----
+include::Models/CarPark_Ref1.eventb[]
+----
+endif::[]
+
+.CarPark_Ref1
+[cols="2a,2"]
+|===
+| *Validation Rules* | *Result*
+| *Good Scenarios* | 
+| _There is no deadlock_ | :heavy_check_mark: or :x:
+| _Number of cars in the parking lot should not exceed the maximum capacity of 500_ | :heavy_check_mark: or :x:
+| _Car should be allowed to enter the lot only when number of cars in the parking lot is less than maximum capacity_ | :heavy_check_mark: or :x:
+| _Car should be allowed to leave the lot only if there is atleast one car in the parking lot_ | :heavy_check_mark: or :x:
+| _Car should be allowed to enter the parking lot only if the access road is free and car is entering the access road_ | :heavy_check_mark: or :x:
+| _Car should be allowed to leave the parking lot only if the access road is free and there is atleast one car in parking lot_ | :heavy_check_mark: or :x:
+
+| *Bad Scenarios* | 
+| _There is a deadlock_ | :heavy_check_mark: or :x:
+| _Number of cars in the parking lot can exceed the maximum capacity of 500_ | :heavy_check_mark: or :x:
+| _Car can be allowed to enter the lot when number of cars in the parking lot is more than maximum capacity_ | :heavy_check_mark: or :x:
+| _Car can be allowed to leave the lot when there is no car in the parking lot_ | :heavy_check_mark: or :x:
+| _Car can be allowed to enter the parking lot if there is no car entering the access road_ | :heavy_check_mark: or :x:
+| _Car can be allowed to leave the parking lot if there is no car in the parking lot_ | :heavy_check_mark: or :x:
+|===
