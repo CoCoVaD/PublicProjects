@@ -13,14 +13,13 @@ chmod +x "$root/petriNet/Scripts/tina-3.7.5/bin/selt"
 chmod +x "$root/petriNet/Scripts/tina-3.7.5/bin/ltl2nc"
 
 tina() {
-    "$root/petriNet/Scripts/tina-3.7.5/bin/tina" "$@"
+    ~/work/Projects/Projects/m1/petriNet/Scripts/tina-3.7.5/bin/tina "$@"
 }
+export -f tina
 
 selt() {
-    "$root/petriNet/Scripts/tina-3.7.5/bin/selt" "$@"
+    ~/work/Projects/Projects/m1/petriNet/Scripts/tina-3.7.5/bin/selt "$@"
 }
-
-export -f tina
 export -f selt
 
 # Changing directory so we don't have to edit script calling of automation.sh
