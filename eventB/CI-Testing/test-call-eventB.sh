@@ -10,12 +10,14 @@ echo "[AUTOMATED TESTS] Defining path for tina and selt for further shell comman
 
 chmod +x "$root/eventB/Scripts/ProB/probcli"
 
+echo "Extracting probcli"
 
 probcli() {
     ~/work/Projects/Projects/m1/eventB/Scripts/ProB/probcli "$@"
 }
 export -f probcli
 
+echo "Exported Probcli successfully"
 # Changing directory so we don't have to edit script calling of automation.sh
 cd "$root/eventB/Scripts"
 
