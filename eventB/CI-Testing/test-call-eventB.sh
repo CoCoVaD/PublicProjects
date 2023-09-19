@@ -12,7 +12,7 @@ chmod +x "$root/eventB/Scripts/ProB/probcli"
 
 
 probcli() {
-    ~/work/Projects/PublicProjects/eventB/Scripts/ProB/probcli "$@"
+    "$root/eventB/Scripts/ProB/probcli" "$@"
 }
 export -f probcli
 
