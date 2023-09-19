@@ -1,7 +1,6 @@
 #!/bin/bash
 
 root=$(pwd)  # Save the current directory
-echo "$root"
 
 echo "[AUTOMATED TESTS] Defining path for tina and selt for further shell commands..."
 
@@ -12,14 +11,11 @@ echo "[AUTOMATED TESTS] Defining path for tina and selt for further shell comman
 chmod +x "$root/eventB/Scripts/ProB/probcli"
 
 
-echo "Extracting probcli"
-
 probcli() {
-    ~/$root/eventB/Scripts/ProB/probcli "$@"
+    ~/work/PublicProjects/PublicProjects/eventB/Scripts/ProB/probcli "$@"
 }
 export -f probcli
 
-echo "Exported Probcli successfully"
 # Changing directory so we don't have to edit script calling of automation.sh
 cd "$root/eventB/Scripts"
 

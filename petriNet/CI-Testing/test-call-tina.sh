@@ -13,12 +13,12 @@ chmod +x "$root/petriNet/Scripts/tina-3.7.5/bin/selt"
 chmod +x "$root/petriNet/Scripts/tina-3.7.5/bin/ltl2nc"
 
 tina() {
-    ~/work/Projects/Projects/m1/petriNet/Scripts/tina-3.7.5/bin/tina "$@"
+    ~/work/PublicProjects/PublicProjects/petriNet/Scripts/tina-3.7.5/bin/tina "$@"
 }
 export -f tina
 
 selt() {
-    ~/work/Projects/Projects/m1/petriNet/Scripts/tina-3.7.5/bin/selt "$@"
+    ~/work/PublicProjects/PublicProjects/petriNet/Scripts/tina-3.7.5/bin/selt "$@"
 }
 export -f selt
 
