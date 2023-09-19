@@ -1,6 +1,7 @@
 #!/bin/bash
 
 root=$(pwd)  # Save the current directory
+echo "$root"
 
 echo "[AUTOMATED TESTS] Defining path for tina and selt for further shell commands..."
 
@@ -10,10 +11,11 @@ echo "[AUTOMATED TESTS] Defining path for tina and selt for further shell comman
 
 chmod +x "$root/eventB/Scripts/ProB/probcli"
 
+
 echo "Extracting probcli"
 
 probcli() {
-    ~/root/eventB/Scripts/ProB/probcli "$@"
+    ~/$root/eventB/Scripts/ProB/probcli "$@"
 }
 export -f probcli
 
