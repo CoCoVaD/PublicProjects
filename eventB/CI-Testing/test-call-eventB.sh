@@ -13,7 +13,7 @@ chmod +x "$root/eventB/Scripts/ProB/probcli"
 echo "Extracting probcli"
 
 probcli() {
-    ~/work/Projects/Projects/m1/eventB/Scripts/ProB/probcli "$@"
+    ~/root/eventB/Scripts/ProB/probcli "$@"
 }
 export -f probcli
 
