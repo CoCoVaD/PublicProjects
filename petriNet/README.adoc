@@ -40,19 +40,6 @@ include::Models/ProcessA.ndr[]
 ----
 endif::[]
 
-.Process A
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _Each entity must follow the path: AIdle → APrinting_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is a deadlock_ | :heavy_check_mark: or :x:
-| _Each entity isn’t following this path: AIdle → APrinting_ | :heavy_check_mark: or :x:
-|===
-
 //Process B
 ifdef::env-github[]
 link:Models/ProcessB.ndr[Process B] is the petrinet model of B.
@@ -61,22 +48,9 @@ endif::[]
 ifndef::env-github[]
 [source,petri,linenums]
 ----
-include::Models/Process B.ndr[]
+include::Models/ProcessB.ndr[]
 ----
 endif::[]
-
-.Process B
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _Each entity must follow the path: BWaiting → BGenerating_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _Each entity isn't following the path: BWaiting → BGenerating_ | :heavy_check_mark: or :x:
-|===
 
 //Process AB
 ifdef::env-github[]
@@ -86,24 +60,9 @@ endif::[]
 ifndef::env-github[]
 [source,petri,linenums]
 ----
-include::Models/Process AB.ndr[]
+include::Models/ProcessAB.ndr[]
 ----
 endif::[]
-
-.Process AB
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _A can start only after B has finished_ | :heavy_check_mark: or :x:
-| _B can start only after A has already started_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is a deadlock_ | :heavy_check_mark: or :x:
-| _A started but B hasn’t finished_ | :heavy_check_mark: or :x:
-| _B is starting, before A has already started_ | :heavy_check_mark: or :x:
-|===
 
 
 
@@ -123,23 +82,6 @@ include::Models/Drilling.ndr[]
 ----
 endif::[]
 
-.Drilling
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _The Robot can only do one task at a time. / The robot is never moving more than one piece at a time. / Robot can only move one piece at a time_ | :heavy_check_mark: or :x:
-| _At most one piece can be present in the buffer_ | :heavy_check_mark: or :x:
-| _Each piece must follow the path: Buffer → Drilling machine. / Each time a piece is in the input buffer, the drilling machine will be used later on. / For every cycle, only if there is a part in the input buffer, the drilling machine can be used later on_ | :heavy_check_mark: or :x:
-| _At any instant, only one of the 2 following statements is true: the drilling is free, the drilling is working_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is a deadlock_ | :heavy_check_mark: or :x:
-| _The Robot can do more than one task at a time_ | :heavy_check_mark: or :x:
-| _More than one piece is drilled at a time_ | :heavy_check_mark: or :x:
-|===
-
 //Micrometer Measure Model
 ifdef::env-github[]
 link:Models/Measure.ndr[Measure] is the petrinet model of measurement and evaluation processes.
@@ -152,24 +94,6 @@ include::Models/Measure.ndr[]
 ----
 endif::[]
 
-.Micrometer Measure
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _At most one piece can be present on the drilling machine or the micrometre_ | :heavy_check_mark: or :x:
-| _Each piece must follow the path: Drilling machine → micrometre → (output buffer or trash)_ | :heavy_check_mark: or :x:
-| _At any instant, only one of the 2 following statements is true: the micrometre is free; the micrometre is working_ | :heavy_check_mark: or :x:
-| _Each time the drilling machine is used, the micrometre will be used later on. / For every cycle, the drilling machine is necessarily used before the micrometre_ | :heavy_check_mark: or :x:
-| _After the micrometre, a piece is necessarily moved to the trash or the output buffer_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is a deadlock_ | :heavy_check_mark: or :x:
-| _More than one piece can is present on the drilling machine or the micrometre_ | :heavy_check_mark: or :x:
-| _After the micrometre, a piece is not necessarily moved to the trash or the output buffer_ | :heavy_check_mark: or :x:
-|===
-
 //ShopFLoor Global Model
 ifdef::env-github[]
 link:Models/Shopfloor.ndr[Shopfloor] is the Global PetriNet, where the composition of the above models have been done so that proper communication can be established.
@@ -181,29 +105,6 @@ ifndef::env-github[]
 include::Models/Shopfloor.ndr[]
 ----
 endif::[]
-
-.ShopFLoor Global Model
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _Robot can only do one task at a time. / The robot is never moving more than one piece at a time. / Robot can only move one piece at a time_ | :heavy_check_mark: or :x:
-| _At most one piece can be present on the drilling machine or the micrometre_ | :heavy_check_mark: or :x:
-| _At most two pieces can be present in the buffer_ | :heavy_check_mark: or :x:
-| _Each piece must follow the path: Buffer → Drilling machine → micrometre → (output buffer or trash)_ | :heavy_check_mark: or :x:
-| _At any instant, only one of the 2 following statements is true: the drilling is free, the drilling is working_ | :heavy_check_mark: or :x:
-| _At any instant, only one of the 2 following statements is true: the micrometre is free; the micrometre is working_ | :heavy_check_mark: or :x:
-| _Each time a piece is in the input buffer, the micrometre will be used later on_ | :heavy_check_mark: or :x:
-| _After the micrometre, a piece is necessarily moved to the trash or the output buffer_ | :heavy_check_mark: or :x:
-| _For every cycle, the drilling machine is necessarily used before the micrometre_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is a deadlock_ | :heavy_check_mark: or :x:
-| _At some instant, following statements can be true at the same time: the micrometre is free; the micrometre is working_ | :heavy_check_mark: or :x:
-| _Part moved to trash and output buffer at a same time_ | :heavy_check_mark: or :x:
-| _Some piece isn’t following the path: Buffer → Drilling machine → micrometre → (output buffer or trash)_ | :heavy_check_mark: or :x:
-|===
 
 
 
@@ -223,20 +124,6 @@ include::Models/WayPointRob.ndr[]
 ----
 endif::[]
 
-.Follow waypoint
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _When the model reaches the last waypoint, it could eventually reach termination_ | :heavy_check_mark: or :x:
-| _After reaching the last waypoint in the list, the robot must go to a new base and stop_ | :heavy_check_mark: or :x:
-| _Before moving through the base and the waypoints, an initialization must be done_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _After reaching the last waypoint in the list, the robot is going to the original base and restarting_ | :heavy_check_mark: or :x:
-|===
-
 //Ball Detection and Delivery Model
 ifdef::env-github[]
 link:Models/BallDetRob.ndr[BallDetRob] is the petrinet model of ball detection and delivery.
@@ -249,21 +136,6 @@ include::Models/BallDetRob.ndr[]
 ----
 endif::[]
 
-.Ball Detection and Delivery
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _If a ball is detected, only one of the statements is true: 1) Ball is lost and 2) the Ball is caught_ | :heavy_check_mark: or :x:
-| _If the ball is caught, the robot will eventually reach the delivery point_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is a deadlock_ | :heavy_check_mark: or :x:
-| _If the ball is caught, the robot will not reach the delivery point_ | :heavy_check_mark: or :x:
-| _The ball is lost, but the robot is still going to the delivery point (L)_ | :heavy_check_mark: or :x:
-|===
-
 //Ball Detection Robot Model
 ifdef::env-github[]
 link:Models/NaviRob.ndr[NaviRob] is the Global PetriNet, where the composition of the above models have been done so that proper communication can be established.
@@ -275,22 +147,3 @@ ifndef::env-github[]
 include::Models/NaviRob.ndr[]
 ----
 endif::[]
-
-.Ball Detection Robot
-[cols="2a,2"]
-|===
-| *Validation Rules* | *Result*
-| *Good Scenarios* | 
-| _When the model reaches the last waypoint, it could eventually reach termination_ | :heavy_check_mark: or :x:
-| _After reaching the last waypoint in the list, the robot must come back to its base and stop_ | :heavy_check_mark: or :x:
-| _Before moving through the base and the waypoints, an initialization must be done_ | :heavy_check_mark: or :x:
-| _If a ball is detected, only one of the statements is true: 1) Ball is lost and 2) Ball is caught_ | :heavy_check_mark: or :x:
-| _If the ball is caught, the robot will eventually reach the delivery point_ | :heavy_check_mark: or :x:
-
-| *Bad Scenarios* | 
-| _There is no deadlock_ | :heavy_check_mark: or :x:
-| _If the ball is caught, the robot will not reach the delivery point_ | :heavy_check_mark: or :x:
-| _After reaching the last waypoint in the list, the robot is going to the original base and restarting_ | :heavy_check_mark: or :x:
-| _The ball is lost, but the robot is still going to the delivery point (L)_ | :heavy_check_mark: or :x:
-|===
-
