@@ -44,7 +44,7 @@ The Rodin-Platform is an {eclipse}-based IDE for Event-B that provides effective
 
 The information related to the {eventB} models can be found link:eventB/README.adoc/[here].
 
-The Final_Output file which is generated after the automation of the validation process using the ProB model checker for the Event-B language can be found link:https://nightly.link/CoCoVaD/PublicProjects/workflows/artefact/master/eventB-report.zip/[here].
+The Final_Output file which is generated after the automation of the validation process using the ProB model checker for the Event-B language can be found link:https://nightly.link/CoCoVaD/PublicProjects/workflows/artefact/master/eventB-report.zip[here].
 
 === {tina}
 TINA (TIme petri Net Analyzer) is a toolbox for the editing and analysis of Petri Nets.
@@ -53,4 +53,4 @@ A Petri net, also known as a place/transition (PT) net, is one of several mathem
 
 The information related to the PetriNet models can be found link:petriNet/README.adoc/[here]
 
-The Final_Output file which is generated after the automation of the validation process using the SELT model checker for the PetriNet Models can be found link:https://nightly.link/CoCoVaD/PublicProjects/workflows/artefact/master/tina-report.zip/[here].
+The Final_Output file which is generated after the automation of the validation process using the SELT model checker for the PetriNet Models can be found link:https://nightly.link/CoCoVaD/PublicProjects/workflows/artefact/master/tina-report.zip[here].
