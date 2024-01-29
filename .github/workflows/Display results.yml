@@ -24,7 +24,7 @@ jobs:
         pip install requests
 
     - name: Execute Python Script
-      run: python read_nightly.py > nightly_results.txt
+      run: python ./read_nightly.py > ./nightly_results.txt
 
 
 
