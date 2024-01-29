@@ -25,6 +25,9 @@ jobs:
 
     - name: Execute Python Script
       run: python ./read_nightly.py > ./nightly_results.txt
+      ls -l   # List files in the current directory for debugging
+      cat ./nightly_results.txt   # Display content for debugging
+      working-directory: ${{ github.workspace }}
 
 
 
