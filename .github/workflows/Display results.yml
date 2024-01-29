@@ -24,10 +24,7 @@ jobs:
         pip install requests
 
     - name: Execute Python Script
-      run: python ./read_nightly.py > nightly_results.txt
+      run: python read_nightly.py > nightly_results.txt
 
-    - name: Append to Readme.adoc
-      run: |
-        echo "=== Nightly Results" >> ./Readme.adoc
-        cat nightly_results.txt >> ./Readme.adoc
+
 
