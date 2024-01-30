@@ -19,4 +19,4 @@ jobs:
           python-version: 3.9  # replace 'x' with the desired Python version
 
       - name: Run Python Script
-        run: python your_script.py  # replace 'your_script.py' with the actual filename
+        run: test.py  # replace 'your_script.py' with the actual filename
