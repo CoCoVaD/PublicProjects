@@ -25,3 +25,4 @@ jobs:
 
     - name: Execute Python Script
       run: python ./test.py
+      working-directory: ${{ github.workspace }}
