@@ -1,22 +1,27 @@
-name: Run Python Script
+name: Run Python
 
 on:
   push:
     branches:
-      - master
+      - master  # Adjust the branch name as needed
 
 jobs:
-  run-python-script:
+  read_nightly:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9  # replace 'x' with the desired Python version
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
 
-      - name: Run Python Script
-        run: test.py  # replace 'your_script.py' with the actual filename
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Execute Python Script
+      run: python ./test.py
