@@ -1,5 +1,5 @@
 # Define the directory path and file name
-directory_path = './eventB'
+directory_path = 'eventB/Images'
 file_name = 'hello_world.txt'
 
 # Combine the directory path and file name to create the full file path
