@@ -1,6 +1,6 @@
 #!/bin/bash
 
-debug="false"			#Write "true" when the output files and Segregated scenarios must be available.
+debug="true"			#Write "true" when the output files and Segregated scenarios must be available.
 
 scripts=("Segregator.sh" "Out_Validator.sh")
 
@@ -24,7 +24,7 @@ if [[ "$debug" == "true" ]]; then
 elif [[ "$debug" == "false" ]]; then
     echo "Debugging Disabled!"
     rm -rf "../Scenarios/Segregated"
-    #rm -rf "../Models/Output_Files"
+    rm -rf "../Models/Output_Files"
     echo "-------------------------------------END OF AUTOMATION-------------------------------------"
     echo ""
 fi
