@@ -35,7 +35,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: eventB-report
-          path: eventB-report
+          path:  ./eventB/
 
       - name: List Event-B Report Contents
         run: ls -R eventB-report
