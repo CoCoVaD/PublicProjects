@@ -1,6 +1,6 @@
 #!/bin/bash
 
-debug="true"			#Write "true" when the output files and Segregated scenarios must be available.
+debug="false"			#Write "true" when the output files and Segregated scenarios must be available.
 
 scripts=("Segregator.sh" "Out_Validator.sh")
 
