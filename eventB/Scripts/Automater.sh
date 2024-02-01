@@ -24,7 +24,7 @@ if [[ "$debug" == "true" ]]; then
 elif [[ "$debug" == "false" ]]; then
     echo "Debugging Disabled!"
     rm -rf "../Scenarios/Segregated"
-    rm -rf "../Models/Output_Files"
+    #rm -rf "../Models/Output_Files"
     echo "-------------------------------------END OF AUTOMATION-------------------------------------"
     echo ""
 fi
