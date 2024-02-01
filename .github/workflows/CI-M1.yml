@@ -40,6 +40,12 @@ jobs:
       - name: List Event-B Report Contents
         run: ls -R eventB-report
       
+      - name: Debugging Commands
+        run: |
+          pwd
+          echo "Contents of eventB-report:"
+          ls -alR eventB-report
+      
       - name: Display Current Directory
         run: pwd
     
