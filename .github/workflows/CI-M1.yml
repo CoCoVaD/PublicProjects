@@ -43,8 +43,8 @@ jobs:
       - name: Debugging Commands
         run: |
           pwd
-          echo "Contents of eventB-report:"
-          ls -alR eventB-report
+          ls -alR /home/runner/work/PublicProjects/PublicProjects
+          ls -alR /home/runner/work/PublicProjects/PublicProjects/eventB-report
       
       - name: Display Current Directory
         run: pwd
