@@ -17,8 +17,11 @@ text_file="OP/Final_Output_eventB.txt"
 > "$text_file" #clear contents of text file
 
 # To print the date
-current_date=$(date +"%d-%m-%Y")
+current_date=$(date +"%d-%m-%Y") 
 echo "Current date is: $current_date" >> "$text_file"
+
+current_time=$(date +"%H:%M:%S")
+echo "Current time is: $current_time" >> "$text_file"
 
 # Define function to generate table rows
 generate_table_row() {
