@@ -36,18 +36,10 @@ jobs:
         with:
           name: eventB-report
           path:  ./eventB/
-
-      - name: List Event-B Report Contents
-        run: ls -R eventB-report
       
-      - name: Debugging Commands
-        run: |
-          pwd
-          ls -alR /home/runner/work/PublicProjects/PublicProjects
-          ls -alR /home/runner/work/PublicProjects/PublicProjects/eventB-report
-      
-      - name: Display Current Directory
-        run: pwd
+      - name: Display contents
+        run:  ls -alR /home/runner/work/PublicProjects/PublicProjects/eventB-report
+        
     
       - name: Provide results for PetriNet (tina) files
         uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
