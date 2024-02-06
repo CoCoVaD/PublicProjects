@@ -27,20 +27,7 @@ jobs:
         with:
           name: eventB-report
           path: eventB/Models/OP/Final_Output_eventB.txt
-      
-      - name: Checkout Code
-        uses: actions/checkout@v2
         
-      - name: Download Event-B Results
-        uses: actions/download-artifact@v3
-        with:
-          name: eventB-report
-          path:  ./eventB/
-      
-      - name: Display contents
-        run:  ls -alR /home/runner/work/PublicProjects/PublicProjects/eventB-report
-        
-    
       - name: Provide results for PetriNet (tina) files
         uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
         with:
