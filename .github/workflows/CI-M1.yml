@@ -2,7 +2,7 @@ name: Export Validation Results
 
 on:
   push:
-    paths:
+    branches:
     - main
 
 jobs:
@@ -14,22 +14,22 @@ jobs:
 
       - name: Grant Execute Permissions
         run: |
-          chmod +x m1/petriNet/CI-Testing/test-call-tina.sh
-          chmod +x m1/eventB/CI-Testing/test-call-eventB.sh
+          chmod +x petriNet/CI-Testing/test-call-tina.sh
+          chmod +x eventB/CI-Testing/test-call-eventB.sh
 
       - name: Launch tests
         run: |
-          ./m1/eventB/CI-Testing/test-call-eventB.sh
-          ./m1/petriNet/CI-Testing/test-call-tina.sh
+          ./eventB/CI-Testing/test-call-eventB.sh
+          ./petriNet/CI-Testing/test-call-tina.sh
 
       - name: Provide results for Event-B files
         uses: actions/upload-artifact@v3  
         with:
           name: eventB-report
-          path: m1/eventB/Models/OP/Final_Output_eventB.txt
+          path: eventB/Models/OP/Final_Output_eventB.txt
 
       - name: Provide results for PetriNet (Tina) files
         uses: actions/upload-artifact@v3  
         with:
           name: tina-report
-          path: m1/petriNet/Models/OP/Final_Output_tina.txt
+          path: petriNet/Models/OP/Final_Output_tina.txt
