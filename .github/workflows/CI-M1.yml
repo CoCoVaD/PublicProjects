@@ -3,8 +3,7 @@ name: Export Validation Results
 on:
   push:
     paths:
-    - 'm1/petriNet/Models/**'
-    - 'm1/eventB/Models/**'
+    - main
 
 jobs:
   validation-tests:
