@@ -13,7 +13,7 @@ chmod +x -R "$root/sysml"
 # Changing directory so we don't have to edit script calling of automation.sh
 cd "$root/sysml/Scripts"
 
-test_script="Automater.sh"
+test_script="Automator.sh"
 
 echo "[AUTOMATED TESTS] Calling for test scripts..."
 ./$test_script
