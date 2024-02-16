@@ -17,9 +17,6 @@ e p9 t11 1 n
 e t13 p9 1 n
 e p8 t13 1 n
 e p7 t9 1 n
-e p4 t6 1 n
-e t9 p4 1 n
-e t12 p8 1 n
-h BallDetRob
+
 
 
