@@ -51,7 +51,6 @@
 <limitation data="0" />
 </extraparam>
 </COMPONENT>
-
 <COMPONENT type="5250" id="64" index="1" uid="78086f4e-47d1-40e4-8531-e27969bad673" >
 <cdparam x="160" y="114" />
 <sizeparam width="477" height="134" minWidth="1" minHeight="30" maxWidth="2000" maxHeight="2000" minDesiredWidth="157" minDesiredHeight="0" />
