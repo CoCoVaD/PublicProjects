@@ -1,0 +1,27 @@
+name: Export SysML Validation Results
+
+on:
+  push:
+    paths:
+    - 'm1/sysml/**'
+
+jobs:
+  validation-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2  # Updated to v2 for compatibility
+
+      - name: Grant Execute Permissions
+        run: |
+          chmod +x sysml/CI-Testing/test-call-sysml.sh
+
+      - name: Launch tests
+        run: |
+          ./sysml/CI-Testing/test-call-sysml.sh
+
+      - name: Provide results for Sysml files
+        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
+        with:
+          name: sysml-report
+          path: sysml/Outputs/combined_output.txt        

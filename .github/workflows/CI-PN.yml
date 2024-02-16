@@ -1,0 +1,29 @@
+name: Export PetriNet Validation Results
+
+on:
+  push:
+    paths:
+    - 'm1/petriNet/**'
+
+jobs:
+  validation-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2  # Updated to v2 for compatibility
+
+      - name: Grant Execute Permissions
+        run: |
+          chmod +x petriNet/CI-Testing/test-call-tina.sh
+
+      - name: Launch tests
+        run: |
+          ./petriNet/CI-Testing/test-call-tina.sh
+        
+      - name: Provide results for PetriNet (tina) files
+        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
+        with:
+          name: tina-report
+          path: petriNet/Models/OP/Final_Output_tina.txt
+  
+        
