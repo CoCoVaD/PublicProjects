@@ -3,7 +3,7 @@ name: Export SysML Validation Results
 on:
   push:
     paths:
-    - 'm1/sysml/Models/**'
+    - 'm1/sysml/**'
 
 jobs:
   validation-tests:
