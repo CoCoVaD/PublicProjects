@@ -1,9 +1,9 @@
-name: Export Validation Results
+name: Export PetriNet Validation Results
 
 on:
   push:
-    branches:
-      - master
+    paths:
+    - 'm1/petriNet/Models/**'
 
 jobs:
   validation-tests:
@@ -15,18 +15,10 @@ jobs:
       - name: Grant Execute Permissions
         run: |
           chmod +x petriNet/CI-Testing/test-call-tina.sh
-          chmod +x eventB/CI-Testing/test-call-eventB.sh
 
       - name: Launch tests
         run: |
-          ./eventB/CI-Testing/test-call-eventB.sh
           ./petriNet/CI-Testing/test-call-tina.sh
-
-      - name: Provide results for Event-B files
-        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
-        with:
-          name: eventB-report
-          path: eventB/Models/OP/Final_Output_eventB.txt
         
       - name: Provide results for PetriNet (tina) files
         uses: actions/upload-artifact@v3  # Updated to v3 for compatibility

@@ -1,0 +1,10 @@
+set model ./Models/infusionpump.xml
+print var model
+action start
+wait 2
+#toto
+action open $model
+wait 4
+action check-syntax
+action avatar-rg -s
+action quit
