@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Assuming this script is in the "Scripts" folder
-=
 cd ..
+
 # Clone TTool repository
-git clone https://gitlab.telecom-paris.fr/mbe-tools/TTool.git
+#git clone https://gitlab.telecom-paris.fr/mbe-tools/TTool.git
 
 # Change directory to TTool
 cd TTool
