@@ -3,7 +3,8 @@ name: Export PetriNet Validation Results
 on:
   push:
     paths:
-    - 'petriNet/**'
+    - 'petriNet/Models/**'
+    - 'petriNet/Scenarios/**'
 
 jobs:
   validation-tests:

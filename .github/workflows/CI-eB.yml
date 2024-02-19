@@ -3,7 +3,8 @@ name: Export Event-B Validation Results
 on:
   push:
     paths:
-    - 'eventB/**'
+    - 'eventB/Models/**'
+    - 'eventB/Scenarios/**'
 
 jobs:
   validation-tests:

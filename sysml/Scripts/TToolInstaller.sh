@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Assuming this script is in the "Scripts" folder
-
+pwd
 cd ..
-
+pwd
+ls
 # Clone TTool repository
 #git clone https://gitlab.telecom-paris.fr/mbe-tools/TTool.git
 

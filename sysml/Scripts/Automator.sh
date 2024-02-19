@@ -1,7 +1,7 @@
 #!/bin/bash
 
 scripts=("TToolInstaller.sh" "MainScript.sh" "Out_Validator_OG.sh")
-
+echo "[Automator Script Running..........]
 for script in "${scripts[@]}"; do
     echo "Running $script .........."
     echo "--------------------------------"
@@ -9,3 +9,4 @@ for script in "${scripts[@]}"; do
     ./"$script"
     echo "$script Completed"
 done
+echo "[Automator Script Completed!]"
