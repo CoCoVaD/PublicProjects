@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
         with:
           name: sysml-report
-          path: sysml/Outputs/combined_output.txt        
+          path: ./sysml/Outputs/combined_output.txt        
