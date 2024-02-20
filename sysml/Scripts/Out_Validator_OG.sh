@@ -11,11 +11,16 @@ mkdir -p "$outputs_folder"
 if [ -d "TTool/bin/Model Checker Output" ]; then
     model_checker_output_folder="TTool/bin/Model Checker Output"
 
-    # Create a combined output file
-    combined_output_file="$outputs_folder/combined_output.txt"
+    # Create a combined output file with time and date
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+    combined_output_file="$outputs_folder/Final_Output_SYSML.txt"
     
     # Clear the content of the combined output file
     > "$combined_output_file"
+
+    # Add time and date to the combined output file
+    echo "Time and Date: $timestamp" >> "$combined_output_file"
+    echo "-------------------------------------------------------------" >> "$combined_output_file"
 
     # Iterate through the output files in the "Model Checker Output" folder
     for output_file in "$model_checker_output_folder"/*; do
@@ -23,9 +28,8 @@ if [ -d "TTool/bin/Model Checker Output" ]; then
             echo "Processing file: $(basename "$output_file")"
             
             # Append the filename to the combined output file
-            echo "----------------------------------------" >> "$combined_output_file"
             echo "$(basename "$output_file")" >> "$combined_output_file"
-            echo "----------------------------------------" >> "$combined_output_file"
+            echo "-------------------------------------------------------------" >> "$combined_output_file"
 
             # Append the content of the output file to the combined output file
             cat "$output_file" >> "$combined_output_file"
@@ -38,4 +42,3 @@ if [ -d "TTool/bin/Model Checker Output" ]; then
 else
     echo "Error: The 'Model Checker Output' folder does not exist in the path."
 fi
-
