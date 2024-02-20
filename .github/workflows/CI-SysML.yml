@@ -10,18 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2  # Updated to v2 for compatibility
+        uses: actions/checkout@v2
+
+      - name: Install XVFB
+        run: sudo apt-get install xvfb
 
       - name: Grant Execute Permissions
         run: |
           chmod +x sysml/CI-Testing/test-call-sysml.sh
 
-      - name: Launch tests
+      - name: Set up XVFB
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Launch tests with XVFB
         run: |
+          export DISPLAY=:99
           ./sysml/CI-Testing/test-call-sysml.sh
 
       - name: Provide results for Sysml files
-        uses: actions/upload-artifact@v3  # Updated to v3 for compatibility
+        uses: actions/upload-artifact@v3
         with:
           name: sysml-report
-          path: sysml/Outputs/combined_output.txt        
+          path: sysml/Outputs/combined_output.txt
