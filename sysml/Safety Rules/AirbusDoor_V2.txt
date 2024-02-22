@@ -1,0 +1,7 @@
+E<> Passenger.isInCockpit ==true&&DoorAndLockButton.inside==1
+E<> DoorAndLockButton.LOCKED_EMPTY_COCKPIT
+DoorAndLockButton.CLOSED_AND_LOCKED --> DoorAndLockButton.CLOSED_AND_UNLOCKED
+DoorAndLockButton.inside == 0 --> DoorAndLockButton.inside>0
+DoorAndLockButton.IN_EMERGENCY_CALL --> DoorAndLockButton.CLOSED_AND_UNLOCKED
+DoorAndLockButton.IN_EMERGENCY_CALL --> DoorAndLockButton.CLOSED_AND_UNLOCKED
+DoorAndLockButton.IN_EMERGENCY_CALL --> DoorAndLockButton.CLOSED_AND_LOCKED || DoorAndLockButton.CLOSED_AND_UNLOCKED

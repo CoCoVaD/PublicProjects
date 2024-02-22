@@ -1,0 +1,14 @@
+A[] CoffeeMachine.nbOfCoins<=2
+T E<> CoffeeMachine.nbOfCoins>0
+E<> CoffeeMachine.nbOfCoins>1
+E[] CoffeeMachine.nbOfCoins<2
+A[] Wallet.nbOfCoins<3
+A[] Wallet.nbOfCoins>=0
+E[] Wallet.nbOfCoins>=1
+F CoffeeMachine.Beverage --> CoffeeMachine.CoffeeDelivered
+CoffeeMachine.Beverage --> CoffeeMachine.CoffeeDelivered && CoffeeMachine.TeaDelivered
+CoffeeMachine.Beverage --> CoffeeMachine.CoffeeDelivered || CoffeeMachine.TeaDelivered
+CoffeeMachine.Beverage --> CoffeeMachine.WaitingForFirstCoin 
+F CoffeeMachine.WaitingForFirstCoin --> CoffeeMachine.EjectState
+CoffeeMachine.WaitingForFirstCoin --> CoffeeMachine.EjectState || CoffeeMachine.WaitingForSecondCoin
+CoffeeMachine.CoffeeDelivered --> CoffeeMachine.nbOfCoins<2
