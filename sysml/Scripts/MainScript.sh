@@ -73,4 +73,3 @@ if [ -d "Models" ]; then
 else
     echo "Error: The 'Models' folder does not exist in the path."
 fi
-
