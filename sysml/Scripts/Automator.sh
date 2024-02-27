@@ -1,6 +1,6 @@
 #!/bin/bash
 
-scripts=("TToolInstaller.sh" "MainScript.sh" "Out_Validator_OG.sh")
+scripts=("TToolInstaller.sh" "MainScript.sh" "Out_Validator.sh")
 echo "[Automator Script Running..........]"
 for script in "${scripts[@]}"; do
     echo "Running $script .........."
