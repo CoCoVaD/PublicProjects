@@ -3,7 +3,9 @@ name: Export SysML Validation Results
 on:
   push:
     paths:
-    - 'sysml/**'
+      - 'sysml/**'
+      #- 'sysml/Models/**'
+      #- 'sysml/Safety Rules/**'
 
 jobs:
   validation-tests:

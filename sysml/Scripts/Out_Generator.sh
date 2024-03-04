@@ -27,7 +27,7 @@ if [ -d "TTool/bin/Model Checker Output" ]; then
         else
             status_icon="❌" # Red cross
         fi
-        printf "| %-100s | %-1s %s |\n" "$rule_name" "$status_icon" >> "$table_output_file"
+        printf "| %-125s | %-1s %s |\n" "$rule_name" "$status_icon" >> "$table_output_file"
     }
 
     # Iterate through the output files in the "Model Checker Output" folder
@@ -36,7 +36,7 @@ if [ -d "TTool/bin/Model Checker Output" ]; then
             echo "Processing file: $(basename "$output_file" .txt)"
             
             # Append the filename (without extension) to the combined output file
-            echo "Name of the model: $(basename "$output_file" .txt)" >> "$combined_output_file"
+            echo -e "\nName of the model: $(basename "$output_file" .txt)" >> "$combined_output_file"
             echo "-------------------------------------------------------------" >> "$combined_output_file"
 
             # Append the content of the output file to the combined output file
