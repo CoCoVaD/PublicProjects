@@ -1,0 +1,16 @@
+F A[] MainController.currentPressure < 20
+T A[] MainController.currentPressure < 50
+T E<> MainController.currentPressure < 20
+T E[] MainController.currentPressure < 20
+F A[] MainController.currentPressure > 17
+F E[] MainController.currentPressure == 20
+F E<> MainController.currentPressure == 22
+T E<> MainController.currentPressure == 20
+T E<> MainController.currentPressure == 0
+T A<> MainController.currentPressure == 0
+F MainController.HighPressure --> AlarmActuator.AlarmOn
+F MainController.HighPressure --> AlarmActuator.AlarmOff
+T MainController.HighPressure --> AlarmManager.AlarmIsOn
+F MainController.HighPressure --> AlarmManager.AlarmIsOff
+F MainController.LowPressure --> AlarmManager.AlarmIsOff
+F PressureSensor.SendingPressure --> MainController.HighPressure

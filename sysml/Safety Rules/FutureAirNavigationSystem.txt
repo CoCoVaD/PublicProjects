@@ -1,0 +1,3 @@
+OnBoardCommunication.IDLE --> (OnBoardCommunication.CONNECTED || OnBoardCommunication.ERROR)
+OnBoardCommunication.IDLE --> OnBoardCommunication.CONNECTED
+OnBoardCommunication.IDLE --> OnBoardCommunication.ERROR
